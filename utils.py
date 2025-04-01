@@ -94,18 +94,23 @@ def animated_text(text, delay=0.03):
         time.sleep(delay)
     print()
 
-def animate_countdown(seconds, message="Удаление через"):
+def animate_countdown(seconds, message="Удаление через", lang=None):
     """Анимированный обратный отсчет"""
-    # Импортируем load_config здесь, чтобы избежать циклической зависимости
-    from settings import load_config
+    # Импортируем здесь для избежания циклических импортов
+    from settings import load_config, TRANSLATIONS, get_system_language
+    
+    if lang is None:
+        config = load_config()
+        lang = config.get('Settings', 'language', fallback=get_system_language())
+    
     config = load_config()
     if not config.getboolean('Settings', 'animations_enabled', fallback=True):
-        print(f"{message} {seconds} сек...")
+        print(f"{message} {seconds} {TRANSLATIONS[lang]['seconds']}...")
         time.sleep(seconds)
         return
         
     for i in range(seconds, 0, -1):
-        sys.stdout.write(f'\r{message} {i} сек... ')
+        sys.stdout.write(f'\r{message} {i} {TRANSLATIONS[lang]["seconds"]}... ')
         sys.stdout.flush()
         time.sleep(1)
     sys.stdout.write('\r' + ' ' * (len(message) + 15) + '\r')
@@ -113,8 +118,15 @@ def animate_countdown(seconds, message="Удаление через"):
 
 # Функции работы с файлами сохранений
 
-def create_backup(base_saves_path):
+def create_backup(base_saves_path, lang=None):
     """Создает резервную копию папки сохранений на рабочем столе"""
+    # Импортируем здесь для избежания циклических импортов
+    from settings import TRANSLATIONS, load_config, get_system_language
+    
+    if lang is None:
+        config = load_config()
+        lang = config.get('Settings', 'language', fallback=get_system_language())
+    
     # Получаем путь к рабочему столу
     desktop_path = os.path.expandvars(r"%USERPROFILE%\Desktop")
     
@@ -126,7 +138,7 @@ def create_backup(base_saves_path):
     try:
         # Начинаем анимацию загрузки в отдельном потоке
         stop_event = threading.Event()
-        loading_thread = threading.Thread(target=animate_loading, args=(stop_event, "Создание резервной копии"))
+        loading_thread = threading.Thread(target=animate_loading, args=(stop_event, TRANSLATIONS[lang]['creating_backup']))
         loading_thread.daemon = True
         loading_thread.start()
         
@@ -137,25 +149,32 @@ def create_backup(base_saves_path):
         stop_event.set()
         loading_thread.join()
         
-        animated_text(f"✅ Создана резервная копия: {backup_path}")
+        animated_text(f"✅ {TRANSLATIONS[lang]['backup_created']}: {backup_path}")
         return backup_path
     except Exception as e:
         if 'stop_event' in locals() and not stop_event.is_set():
             stop_event.set()
             loading_thread.join()
-        print(f"❌ Ошибка при создании резервной копии: {str(e)}")
+        print(f"❌ {TRANSLATIONS[lang]['backup_error']}: {str(e)}")
         return None
 
-def restore_backup(backup_path, base_saves_path):
+def restore_backup(backup_path, base_saves_path, lang=None):
     """Восстанавливает сохранения из резервной копии"""
+    # Импортируем здесь для избежания циклических импортов
+    from settings import TRANSLATIONS, load_config, get_system_language
+    
+    if lang is None:
+        config = load_config()
+        lang = config.get('Settings', 'language', fallback=get_system_language())
+    
     if not os.path.exists(backup_path):
-        print("❌ Резервная копия не найдена!")
+        print(f"❌ {TRANSLATIONS[lang]['backup_not_found']}")
         return False
         
     try:
         # Начинаем анимацию загрузки в отдельном потоке
         stop_event = threading.Event()
-        loading_thread = threading.Thread(target=animate_loading, args=(stop_event, "Восстановление сохранений"))
+        loading_thread = threading.Thread(target=animate_loading, args=(stop_event, TRANSLATIONS[lang]['restoring_saves']))
         loading_thread.daemon = True
         loading_thread.start()
         
@@ -168,24 +187,30 @@ def restore_backup(backup_path, base_saves_path):
         stop_event.set()
         loading_thread.join()
         
-        animated_text(f"✅ Сохранения восстановлены из: {backup_path}")
+        animated_text(f"✅ {TRANSLATIONS[lang]['saves_restored']}: {backup_path}")
         return True
     except Exception as e:
         if 'stop_event' in locals() and not stop_event.is_set():
             stop_event.set()
             loading_thread.join()
-        print(f"❌ Ошибка при восстановлении: {str(e)}")
+        print(f"❌ {TRANSLATIONS[lang]['restore_error']}: {str(e)}")
         return False
 
-def launch_game():
+def launch_game(lang=None):
     """Запускает игру, если путь настроен"""
-    # Импортируем load_config здесь, чтобы избежать циклической зависимости
-    from settings import load_config
-    config = load_config()
+    # Импортируем здесь для избежания циклических импортов
+    from settings import load_config, TRANSLATIONS, get_system_language
+    
+    if lang is None:
+        config = load_config()
+        lang = config.get('Settings', 'language', fallback=get_system_language())
+    else:
+        config = load_config()
+    
     game_path = config.get('Settings', 'game_exe_path', fallback='')
     
     if game_path and os.path.exists(game_path):
-        animated_text(f"🚀 Запуск игры: {game_path}", 0.02)
+        animated_text(f"🚀 {TRANSLATIONS[lang]['launching_game']}: {game_path}", 0.02)
         try:
             # Используем shell=True и исправляем потенциальные проблемы с путем
             # Экранируем путь в кавычки для обработки пробелов и спец. символов
@@ -199,19 +224,29 @@ def launch_game():
                 
             return True
         except Exception as e:
-            print(f"❌ Ошибка при запуске игры: {str(e)}")
-            animated_text("🛠️ Возможное решение: запустите эту программу с правами администратора", 0.02)
-            animated_text("   или запустите игру вручную из Steam", 0.02)
+            print(f"❌ {TRANSLATIONS[lang]['launch_error']}: {str(e)}")
+            animated_text(f"🛠️ {TRANSLATIONS[lang]['launch_solution']}", 0.02)
+            animated_text(f"   {TRANSLATIONS[lang]['launch_manually']}", 0.02)
             return False
     else:
-        print("❌ Путь к игре не настроен или файл не существует.")
-        print("Используйте опцию 'Настроить путь к игре' в меню.")
+        print(f"❌ {TRANSLATIONS[lang]['path_not_configured_full']}")
+        print(f"{TRANSLATIONS[lang]['use_settings']}")
         return False
 
 # Функция для отображения истории изменений
-def show_changelog(CHANGELOG):
+def show_changelog(CHANGELOG, lang=None):
     """Отображает историю изменений программы"""
+    # Импортируем здесь для избежания циклических импортов
+    from settings import TRANSLATIONS
+    
     os.system('cls' if os.name == 'nt' else 'clear')
+    
+    # Если язык не указан, используем русский по умолчанию
+    if lang is None:
+        from settings import load_config, get_system_language
+        config = load_config()
+        lang = config.get('Settings', 'language', fallback=get_system_language())
+    
     animated_text("📋 ИСТОРИЯ ИЗМЕНЕНИЙ", 0.02)
     print("-" * 50)
     
@@ -222,4 +257,4 @@ def show_changelog(CHANGELOG):
             animated_text(f"  • {change}", 0.01)
     
     print("\n" + "-" * 50)
-    input("Нажмите Enter для возврата в главное меню...") 
+    input(f"{TRANSLATIONS[lang]['enter_to_continue']}") 

@@ -14,21 +14,22 @@ from tkinter import filedialog
 # Импорт функций из модулей
 from settings import (
     CHANGELOG, load_config, save_config, program_settings, 
-    select_game_exe, toggle_animations, toggle_auto_launch
+    select_game_exe, toggle_animations, toggle_auto_launch,
+    TRANSLATIONS, language_menu, get_system_language
 )
 from utils import (
     animate_loading, progress_bar, animated_text, animate_countdown,
     create_backup, restore_backup, launch_game, show_changelog, check_yes_input
 )
 
-def show_current_balance():
+def show_current_balance(lang):
     """Отображает текущий баланс денег в сохранениях"""
     # Базовый путь к папке сохранений игры
     base_saves_path = os.path.expandvars(r"%USERPROFILE%\AppData\LocalLow\TVGS\Schedule I\Saves")
     
     # Проверка существования базовой папки
     if not os.path.exists(base_saves_path):
-        print(f"❌ Папка сохранений не найдена: {base_saves_path}")
+        print(f"{TRANSLATIONS[lang]['savings_path_not_found'].format(base_saves_path)}")
         return
     
     # Анимируем поиск папок
@@ -46,7 +47,7 @@ def show_current_balance():
     loading_thread.join()
     
     if not user_folders:
-        print("❌ Не найдены папки пользователей в директории сохранений.")
+        print(f"{TRANSLATIONS[lang]['no_user_folders']}")
         return
     
     # Собираем данные о балансах
@@ -128,7 +129,7 @@ def show_current_balance():
     # Отображаем результаты
     if balances:
         print("\n" + "=" * 100)
-        print(f"{'Пользователь':<15} {'Сохранение':<25} {'Время':<20} {'Баланс счета':>15} {'Наличные':>15}")
+        print(f"{TRANSLATIONS[lang]['user']:<15} {TRANSLATIONS[lang]['save']:<25} {TRANSLATIONS[lang]['time']:<20} {TRANSLATIONS[lang]['balance']:>15} {TRANSLATIONS[lang]['cash']:>15}")
         print("=" * 100)
         
         for bal in sorted(balances, key=lambda x: x["time"], reverse=True):
@@ -139,40 +140,40 @@ def show_current_balance():
             print(f"{bal['user']:<15} {bal['save']:<25} {bal['time']:<20} {balance_str:>15} {cash_str:>15}")
         
         print("=" * 100)
-        print(f"Всего найдено сохранений: {len(balances)}")
+        print(f"{TRANSLATIONS[lang]['total_saves']}: {len(balances)}")
     else:
         print("ℹ️ Не найдены файлы с балансом денег.")
     
-    input("\nНажмите Enter для возврата в меню...")
+    input(f"\n{TRANSLATIONS[lang]['enter_to_continue']}")
 
-def load_backup():
+def load_backup(lang):
     """Загружает сохранения из резервной копии"""
     # Базовый путь к папке сохранений игры
     base_saves_path = os.path.expandvars(r"%USERPROFILE%\AppData\LocalLow\TVGS\Schedule I\Saves")
     
     if not os.path.exists(base_saves_path):
-        print(f"❌ Папка сохранений не найдена: {base_saves_path}")
-        input("\nНажмите Enter для продолжения...")
+        print(f"{TRANSLATIONS[lang]['savings_path_not_found'].format(base_saves_path)}")
+        input(f"\n{TRANSLATIONS[lang]['enter_to_continue']}")
         return
     
     # Используем проводник для выбора папки бэкапа
     root = tk.Tk()
     root.withdraw()
     
-    animated_text("🔍 Выберите папку с резервной копией...", 0.02)
+    animated_text(f"🔍 {TRANSLATIONS[lang]['select_backup_folder']}...", 0.02)
     
     # Выбираем директорию на рабочем столе
     desktop_path = os.path.expandvars(r"%USERPROFILE%\Desktop")
     backup_path = filedialog.askdirectory(
-        title="Выберите папку с резервной копией",
+        title=TRANSLATIONS[lang]['select_backup_folder'],
         initialdir=desktop_path
     )
     
     root.destroy()
     
     if not backup_path:
-        animated_text("❌ Выбор отменен", 0.02)
-        input("\nНажмите Enter для продолжения...")
+        animated_text(f"❌ {TRANSLATIONS[lang]['selection_canceled']}", 0.02)
+        input(f"\n{TRANSLATIONS[lang]['enter_to_continue']}")
         return
     
     # Проверяем, что папка содержит структуру сохранений
@@ -188,53 +189,37 @@ def load_backup():
                 break
     
     if not is_valid_backup:
-        animated_text("❌ Выбранная папка не является корректной резервной копией сохранений!", 0.02)
-        animated_text("Резервная копия должна содержать папки с именами пользователей и подпапки SaveGame_*", 0.02)
-        input("\nНажмите Enter для продолжения...")
+        animated_text(f"❌ {TRANSLATIONS[lang]['invalid_backup_folder']}", 0.02)
+        animated_text(f"{TRANSLATIONS[lang]['backup_folder_requirements']}", 0.02)
+        input(f"\n{TRANSLATIONS[lang]['enter_to_continue']}")
         return
     
     # Создаем дополнительную резервную копию текущих сохранений перед восстановлением
-    confirmation = input("⚠️ Восстановление заменит все текущие сохранения! Создать резервную копию текущих сохранений? (д/н): ")
+    confirmation = input(f"⚠️ {TRANSLATIONS[lang]['restore_warning']} ({TRANSLATIONS[lang]['yes_no_choice']}): ")
     
     if check_yes_input(confirmation):
-        backup_current = create_backup(base_saves_path)
+        backup_current = create_backup(base_saves_path, lang)
         if not backup_current:
-            confirm_continue = input("❌ Не удалось создать резервную копию. Продолжить без бэкапа? (д/н): ")
-            if not check_yes_input(confirm_continue):
-                animated_text("❌ Восстановление отменено пользователем", 0.02)
-                input("\nНажмите Enter для продолжения...")
+            confirmation = input(f"⚠️ {TRANSLATIONS[lang]['continue_without_backup']} ({TRANSLATIONS[lang]['yes_no_choice']}): ")
+            if not check_yes_input(confirmation):
                 return
     
-    # Последнее подтверждение
-    final_confirm = input(f"\n⚠️ Вы действительно хотите восстановить сохранения из:\n{backup_path}\n\nВсе текущие сохранения будут заменены! (д/н): ")
-    
-    if not check_yes_input(final_confirm):
-        animated_text("❌ Восстановление отменено пользователем", 0.02)
-        input("\nНажмите Enter для продолжения...")
-        return
-    
-    # Восстанавливаем из бэкапа
-    if restore_backup(backup_path, base_saves_path):
-        animated_text("✅ Сохранения успешно восстановлены из бэкапа", 0.02)
-        
-        # Спрашиваем об удалении бэкапа после восстановления
-        delete_confirm = input("\n🗑️ Удалить папку бэкапа после восстановления? (д/н): ")
-        
-        if check_yes_input(delete_confirm):
-            # Анимированный обратный отсчет
-            animate_countdown(3, "🗑️ Удаление папки бэкапа через")
-            
+    # Восстанавливаем из резервной копии
+    if restore_backup(backup_path, base_saves_path, lang):
+        # Предлагаем удалить исходный бэкап после восстановления
+        delete_backup = input(f"\n{TRANSLATIONS[lang]['delete_backup_after_restore']} ({TRANSLATIONS[lang]['yes_no_choice']}): ")
+        if check_yes_input(delete_backup):
             try:
+                animated_text(f"🔄 {TRANSLATIONS[lang]['deleting_backup']}...", 0.02)
+                animate_countdown(3, f"{TRANSLATIONS[lang]['deletion_countdown']}")
                 shutil.rmtree(backup_path)
-                animated_text(f"✅ Папка бэкапа успешно удалена: {backup_path}", 0.02)
+                animated_text(f"✅ {TRANSLATIONS[lang]['backup_deleted']}", 0.02)
             except Exception as e:
-                print(f"⚠️ Ошибка при удалении папки бэкапа: {str(e)}")
-    else:
-        animated_text("❌ Не удалось восстановить сохранения из бэкапа", 0.02)
+                print(f"⚠️ {TRANSLATIONS[lang]['deletion_error']}: {str(e)}")
     
-    input("\nНажмите Enter для продолжения...")
+    input(f"\n{TRANSLATIONS[lang]['enter_to_continue']}")
 
-def patch_cash_inventory():
+def patch_cash_inventory(lang):
     """Изменяет наличные деньги в файле инвентаря игрока"""
     # Базовый путь к папке сохранений игры
     base_saves_path = os.path.expandvars(r"%USERPROFILE%\AppData\LocalLow\TVGS\Schedule I\Saves")
@@ -250,7 +235,7 @@ def patch_cash_inventory():
     # Спрашиваем у пользователя сумму наличных для установки
     while True:
         try:
-            custom_cash = input("💸 Введите сумму НАЛИЧНЫХ денег для установки: ")
+            custom_cash = input(f"{TRANSLATIONS[lang]['enter_cash']}: ")
             if custom_cash.strip() == "":
                 print("⚠️ Значение не может быть пустым!")
                 continue
@@ -365,8 +350,8 @@ def patch_cash_inventory():
         # Обновляем файлы с прогресс-баром
         for i, (file_path, data, user_folder, folder) in enumerate(files_to_update):
             progress_bar(i + 1, len(files_to_update), 
-                         prefix=f'Прогресс обновления: ({i+1}/{len(files_to_update)})', 
-                         suffix='Завершено', length=40)
+                         prefix=f'{TRANSLATIONS[lang]["progress_update"]} ({i+1}/{len(files_to_update)})', 
+                         suffix=TRANSLATIONS[lang]['completed'], length=40)
             
             try:
                 # Записываем обновленный JSON обратно в файл
@@ -376,12 +361,12 @@ def patch_cash_inventory():
                 total_files_updated += 1
                 time.sleep(0.2)  # Небольшая задержка для визуального эффекта прогресс-бара
             except Exception as e:
-                print(f"\n⚠️ Ошибка при обновлении {folder}: {str(e)}")
+                print(f"\n⚠️ {TRANSLATIONS[lang]['error_update']} {folder}: {str(e)}")
         
         print()
-        animated_text(f"✅ Обновлено файлов с наличными: {total_files_updated} из {total_files_processed}", 0.02)
+        animated_text(f"✅ {TRANSLATIONS[lang]['updated_cash']}: {total_files_updated} из {total_files_processed}", 0.02)
     else:
-        animated_text(f"ℹ️ Файлы для обновления наличных не найдены или все балансы уже установлены на {custom_cash}", 0.02)
+        animated_text(f"ℹ️ {TRANSLATIONS[lang]['no_update_cash']} или все балансы уже установлены на {custom_cash}", 0.02)
     
     # В конце функции после всех обновлений добавляем автозапуск
     if config.getboolean('Settings', 'auto_launch_game', fallback=False):
@@ -389,7 +374,7 @@ def patch_cash_inventory():
         if check_yes_input(launch_choice):
             launch_game()
 
-def patch_money_file():
+def patch_money_file(lang):
     """Изменяет деньги в файлах сохранений"""
     # Базовый путь к папке сохранений игры
     base_saves_path = os.path.expandvars(r"%USERPROFILE%\AppData\LocalLow\TVGS\Schedule I\Saves")
@@ -405,7 +390,7 @@ def patch_money_file():
     # Спрашиваем у пользователя сумму денег для установки
     while True:
         try:
-            custom_money = input("💰 Введите сумму денег для установки: ")
+            custom_money = input(f"{TRANSLATIONS[lang]['enter_money']}: ")
             if custom_money.strip() == "":
                 print("⚠️ Значение не может быть пустым!")
                 continue
@@ -483,8 +468,8 @@ def patch_money_file():
         # Обновляем файлы с прогресс-баром
         for i, (file_path, data, user_folder, folder) in enumerate(files_to_update):
             progress_bar(i + 1, len(files_to_update), 
-                         prefix=f'Прогресс обновления: ({i+1}/{len(files_to_update)})', 
-                         suffix='Завершено', length=40)
+                         prefix=f'{TRANSLATIONS[lang]["progress_update"]} ({i+1}/{len(files_to_update)})', 
+                         suffix=TRANSLATIONS[lang]['completed'], length=40)
             
             try:
                 # Устанавливаем новое значение
@@ -497,12 +482,12 @@ def patch_money_file():
                 total_files_updated += 1
                 time.sleep(0.2)  # Небольшая задержка для визуального эффекта прогресс-бара
             except Exception as e:
-                print(f"\n⚠️ Ошибка при обновлении {folder}: {str(e)}")
+                print(f"\n⚠️ {TRANSLATIONS[lang]['error_update']} {folder}: {str(e)}")
         
         print()
-        animated_text(f"✅ Обновлено файлов: {total_files_updated} из {total_files_processed}", 0.02)
+        animated_text(f"✅ {TRANSLATIONS[lang]['updated_money']}: {total_files_updated} из {total_files_processed}", 0.02)
     else:
-        animated_text(f"ℹ️ Файлы для обновления не найдены или все балансы уже установлены на {custom_money}", 0.02)
+        animated_text(f"ℹ️ {TRANSLATIONS[lang]['no_update_money']} или все балансы уже установлены на {custom_money}", 0.02)
     
     # В конце функции после всех обновлений добавляем автозапуск
     if config.getboolean('Settings', 'auto_launch_game', fallback=False):
@@ -510,43 +495,47 @@ def patch_money_file():
         if check_yes_input(launch_choice):
             launch_game()
 
-def edit_money_menu():
+def edit_money_menu(lang):
     """Меню выбора типа денег для изменения"""
     while True:
         print("\n" + "=" * 50)
-        animated_text("Выберите тип денег для изменения:", 0.02)
-        animated_text("1. 💳 Деньги на счету (Money.json)", 0.02)
-        animated_text("2. 💸 Наличные деньги (Inventory.json)", 0.02)
-        animated_text("3. 🔙 Вернуться в главное меню", 0.02)
+        animated_text(f"{TRANSLATIONS[lang]['select_money_type']}", 0.02)
+        animated_text(f"1. {TRANSLATIONS[lang]['account_money']}", 0.02)
+        animated_text(f"2. {TRANSLATIONS[lang]['cash_money']}", 0.02)
+        animated_text(f"3. {TRANSLATIONS[lang]['return_to_main']}", 0.02)
         print("=" * 50)
         
         choice = input("\nВаш выбор (1-3): ")
         
         if choice == "1":
             # Запускаем функцию патча счета
-            patch_money_file()
+            patch_money_file(lang)
             return
         elif choice == "2":
             # Запускаем функцию патча наличных
-            patch_cash_inventory()
+            patch_cash_inventory(lang)
             return
         elif choice == "3":
             return
         else:
-            print("⚠️ Неверный выбор. Пожалуйста, введите число от 1 до 3.")
+            print(f"{TRANSLATIONS[lang]['invalid_choice'].format(3)}")
         
         # Ждем подтверждения для продолжения
-        input("\nНажмите Enter для продолжения...")
+        input(f"\n{TRANSLATIONS[lang]['enter_to_continue']}")
 
 if __name__ == "__main__":
     # Очищаем экран и выводим красивый заголовок
     os.system('cls' if os.name == 'nt' else 'clear')
     
+    # Загружаем конфигурацию для получения языка
+    config = load_config()
+    lang = config.get('Settings', 'language', fallback=get_system_language())
+    
     title = """
     ╔╦╗╔═╗╔╗╔╔═╗╦ ╦  ╔═╗╔═╗╔╦╗╔═╗╦ ╦╔═╗╦═╗
     ║║║║ ║║║║║╣ ╚╦╝  ╠═╝╠═╣ ║ ║  ╠═╣║╣ ╠╦╝
     ╩ ╩╚═╝╝╚╝╚═╝ ╩   ╩  ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╩╚═
-           для Schedule I v1.8.2 by Sparki)
+           для Schedule I v1.9 by Sparki)
     """
     
     for line in title.split('\n'):
@@ -557,43 +546,45 @@ if __name__ == "__main__":
     # Главное меню
     while True:
         print("\n" + "=" * 50)
-        animated_text("Выберите действие:", 0.02)
-        animated_text("1. 💵 Изменить деньги в сохранениях", 0.02)
-        animated_text("2. 👁️ Показать текущий баланс", 0.02)
-        animated_text("3. ⚙️ Настройки программы", 0.02)
-        animated_text("4. 🚀 Запустить игру", 0.02)
-        animated_text("5. 💾 Загрузить backup", 0.02)
-        animated_text("6. 📋 Показать историю изменений (changelog)", 0.02)
-        animated_text("7. ❌ Выход", 0.02)
+        animated_text(f"{TRANSLATIONS[lang]['select_action']}", 0.02)
+        animated_text(f"1. {TRANSLATIONS[lang]['edit_money']}", 0.02)
+        animated_text(f"2. {TRANSLATIONS[lang]['show_balance']}", 0.02)
+        animated_text(f"3. {TRANSLATIONS[lang]['settings']}", 0.02)
+        animated_text(f"4. {TRANSLATIONS[lang]['launch_game']}", 0.02)
+        animated_text(f"5. {TRANSLATIONS[lang]['load_backup']}", 0.02)
+        animated_text(f"6. {TRANSLATIONS[lang]['show_changelog']}", 0.02)
+        animated_text(f"7. {TRANSLATIONS[lang]['exit']}", 0.02)
         print("=" * 50)
         
         choice = input("\nВаш выбор (1-7): ")
         
         if choice == "1":
             # Показываем подменю выбора типа денег
-            edit_money_menu()
+            edit_money_menu(lang)
         elif choice == "2":
             # Показываем текущий баланс
-            show_current_balance()
+            show_current_balance(lang)
         elif choice == "3":
             # Открываем меню настроек программы
-            program_settings(animated_text, input, os)
+            new_lang = program_settings(animated_text, input, os)
+            if new_lang:
+                lang = new_lang
         elif choice == "4":
             # Запускаем игру
             launch_game()
-            input("\nНажмите Enter для продолжения...")
+            input(f"\n{TRANSLATIONS[lang]['enter_to_continue']}")
         elif choice == "5":
             # Загружаем сохранения из резервной копии
-            load_backup()
+            load_backup(lang)
         elif choice == "6":
             # Показываем changelog
-            show_changelog(CHANGELOG)
+            show_changelog(CHANGELOG, lang)
         elif choice == "7":
-            animated_text("\n✅ До свидания! Нажмите Enter для выхода...", 0.02)
+            animated_text(f"\n{TRANSLATIONS[lang]['goodbye']}", 0.02)
             input()
             break
         else:
-            print("⚠️ Неверный выбор. Пожалуйста, введите число от 1 до 7.")
+            print(f"{TRANSLATIONS[lang]['invalid_choice'].format(7)}")
         
         # Очищаем экран после каждого действия
         os.system('cls' if os.name == 'nt' else 'clear')
