@@ -37,21 +37,21 @@ This program automatically finds all Schedule I game saves (for all users) and c
 
 ## Features
 
-- Change the amount of money in saves to any user-specified amount
-- Change the amount of cash in the player's inventory
-- View the current balance (both account and cash) in all saves without making changes
-- Automatic game launch after making changes (optional)
-- Configure the path to the game exe file through Windows Explorer
-- Option to disable animations for faster operation
-- Load saves from previously created backups
-- Automatic search for all user folders (works with any user IDs)
-- Update all found saves
-- Backup all saves to the desktop before making changes
-- Ability to restore saves from a backup
-- Final statistics on the number of processed and updated files
-- Visual animations and progress bars to track execution progress
-- Improved input handling considering different keyboard layouts when choosing yes/no
-- Multilingual interface (Russian and English) with automatic system language detection
+- 💵 **Changing account money balance:** works in both online and single-player modes
+- 💰 **Changing cash money amount:** works mainly in single-player mode only
+- 👁️ **View current balance** in all saves without making changes
+- 🚀 **Automatic game launch** after making changes (optional)
+- 📂 **Configure the path to the game exe file** through Windows Explorer
+- ⚡ **Option to disable animations** for faster operation
+- 💾 **Load saves** from previously created backups
+- 🔍 **Automatic search** for all user folders (works with any user IDs)
+- 🔄 **Update all found saves**
+- 🔒 **Backup all saves** to the desktop before making changes
+- 🔙 **Ability to restore saves** from a backup
+- 📊 **Final statistics** on the number of processed and updated files
+- ✨ **Visual animations and progress bars** to track execution progress
+- ⌨️ **Improved input handling** considering different keyboard layouts when choosing yes/no
+- 🌐 **Multilingual interface** (Russian and English) with automatic system language detection
 
 ## Program Structure
 
