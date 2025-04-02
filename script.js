@@ -27,35 +27,63 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     const langButton = document.getElementById('lang-button');
+    const langIcon = langButton.querySelector('i');
     const langSpan = langButton.querySelector('span');
     
     const savedLang = localStorage.getItem('lang');
+    let currentLang = 'ru';
     
     if (savedLang) {
-        document.body.setAttribute('data-lang', savedLang);
-        langSpan.textContent = savedLang.toUpperCase();
-        updateTexts(savedLang);
+        currentLang = savedLang;
+        document.body.setAttribute('data-lang', currentLang);
+        updateLangButton(currentLang);
+        updateTexts(currentLang);
     }
     
     langButton.addEventListener('click', function() {
-        const currentLang = document.body.getAttribute('data-lang');
-        const newLang = currentLang === 'ru' ? 'en' : 'ru';
+        currentLang = currentLang === 'ru' ? 'en' : 'ru';
         
-        document.body.setAttribute('data-lang', newLang);
-        langSpan.textContent = newLang.toUpperCase();
+        document.body.setAttribute('data-lang', currentLang);
+        updateLangButton(currentLang);
         
-        localStorage.setItem('lang', newLang);
-        updateTexts(newLang);
+        localStorage.setItem('lang', currentLang);
+        updateTexts(currentLang);
     });
+    
+    function updateLangButton(lang) {
+        if (lang === 'ru') {
+            langIcon.className = 'fas fa-flag-usa';
+            langSpan.textContent = 'Русский';
+            langButton.title = 'Switch to English';
+        } else {
+            langIcon.className = 'fas fa-flag-russia';
+            langSpan.textContent = 'English';
+            langButton.title = 'Переключить на русский';
+        }
+    }
     
     function updateTexts(lang) {
         document.querySelectorAll('[data-ru]').forEach(element => {
-            if (lang === 'ru') {
-                element.textContent = element.getAttribute('data-ru');
+            if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                if (element.hasAttribute('placeholder')) {
+                    element.placeholder = element.getAttribute(`data-${lang}-placeholder`);
+                } else {
+                    element.value = element.getAttribute(`data-${lang}`);
+                }
             } else {
-                element.textContent = element.getAttribute('data-en');
+                if (lang === 'ru') {
+                    element.textContent = element.getAttribute('data-ru');
+                } else {
+                    element.textContent = element.getAttribute('data-en');
+                }
             }
         });
+        
+        document.title = lang === 'ru' 
+            ? 'Money Patcher для Schedule I' 
+            : 'Money Patcher for Schedule I';
+            
+        document.documentElement.lang = lang;
     }
     
     const downloadButtons = document.querySelectorAll('.download-button');
