@@ -1,6 +1,6 @@
-# Money Patcher для Schedule I
+# Money Patcher для Schedule I (English README - [Readme_Eng](https://github.com/Sparki1337/Schedule-I-Cheat-money/blob/main/README_EN.md))
 
-Программа для изменения значения баланса в файлах сохранений игры Schedule I.
+Программа для изменения значения баланса в файлах сохранений игры Schedule I. 
 
 ## Веб-сайт программы
 
