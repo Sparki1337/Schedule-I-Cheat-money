@@ -7,11 +7,20 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="light-theme">
-    <div class="theme-toggle">
-        <button id="theme-button">
-            <i class="fas fa-moon"></i>
-        </button>
+<body class="light-theme" data-lang="ru">
+    <div class="controls">
+        <div class="theme-toggle">
+            <button id="theme-button" title="Сменить тему">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+
+        <div class="lang-toggle">
+            <button id="lang-button" title="Change language / Сменить язык">
+                <i class="fas fa-language"></i>
+                <span>RU</span>
+            </button>
+        </div>
     </div>
 
     <div class="container">
@@ -22,87 +31,73 @@
 ║║║║ ║║║║║╣ ╚╦╝  ╠═╝╠═╣ ║ ║  ╠═╣║╣ ╠╦╝
 ╩ ╩╚═╝╝╚╝╚═╝ ╩   ╩  ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╩╚═</pre>
             </div>
-            <h1>Money Patcher для Schedule I</h1>
-            <p class="tagline">Удобный инструмент для изменения баланса денег в игре</p>
+            <h1 data-ru="Money Patcher для Schedule I" data-en="Money Patcher for Schedule I">Money Patcher для Schedule I</h1>
+            <p class="tagline" data-ru="Удобный инструмент для изменения баланса денег в игре" data-en="Convenient tool for changing in-game money balance">Удобный инструмент для изменения баланса денег в игре</p>
         </header>
 
         <main>
             <section class="features">
-                <h2>Возможности программы</h2>
+                <h2 data-ru="Возможности программы" data-en="Program Features">Возможности программы</h2>
                 <ul>
-                    <li><i class="fas fa-money-bill-wave"></i> Изменение количества денег на счету</li>
-                    <li><i class="fas fa-coins"></i> Изменение количества наличных денег</li>
-                    <li><i class="fas fa-eye"></i> Просмотр текущего баланса во всех сохранениях</li>
-                    <li><i class="fas fa-rocket"></i> Автоматический запуск игры после изменений</li>
-                    <li><i class="fas fa-save"></i> Создание резервных копий сохранений</li>
-                    <li><i class="fas fa-download"></i> Загрузка сохранений из резервных копий</li>
-                    <li><i class="fas fa-language"></i> Поддержка русского и английского языков</li>
+                    <li><i class="fas fa-money-bill-wave"></i> <span data-ru="Изменение количества денег на счету" data-en="Changing account money balance">Изменение количества денег на счету</span></li>
+                    <li><i class="fas fa-coins"></i> <span data-ru="Изменение количества наличных денег" data-en="Changing cash money amount">Изменение количества наличных денег</span></li>
+                    <li><i class="fas fa-eye"></i> <span data-ru="Просмотр текущего баланса во всех сохранениях" data-en="View current balance in all saves">Просмотр текущего баланса во всех сохранениях</span></li>
+                    <li><i class="fas fa-rocket"></i> <span data-ru="Автоматический запуск игры после изменений" data-en="Automatic game launch after changes">Автоматический запуск игры после изменений</span></li>
+                    <li><i class="fas fa-save"></i> <span data-ru="Создание резервных копий сохранений" data-en="Creating backups of game saves">Создание резервных копий сохранений</span></li>
+                    <li><i class="fas fa-download"></i> <span data-ru="Загрузка сохранений из резервных копий" data-en="Loading game saves from backups">Загрузка сохранений из резервных копий</span></li>
+                    <li><i class="fas fa-language"></i> <span data-ru="Поддержка русского и английского языков" data-en="Russian and English language support">Поддержка русского и английского языков</span></li>
                 </ul>
             </section>
 
             <section class="download">
-                <h2>Скачать программу</h2>
+                <h2 data-ru="Скачать программу" data-en="Download Program">Скачать программу</h2>
                 <div class="download-cards">
                     <div class="card">
-                        <h3>Версия 1.9</h3>
-                        <p>Актуальная версия с поддержкой нескольких языков</p>
+                        <h3 data-ru="Версия 1.9" data-en="Version 1.9">Версия 1.9</h3>
+                        <p data-ru="Актуальная версия с поддержкой нескольких языков" data-en="Latest version with multi-language support">Актуальная версия с поддержкой нескольких языков</p>
                         <ul class="changelog">
-                            <li>Добавлена поддержка мультиязычности (русский и английский)</li>
-                            <li>Автоматическое определение языка системы</li>
-                            <li>Улучшенный интерфейс выбора языка</li>
+                            <li data-ru="Добавлена поддержка мультиязычности (русский и английский)" data-en="Added multi-language support (Russian and English)">Добавлена поддержка мультиязычности (русский и английский)</li>
+                            <li data-ru="Автоматическое определение языка системы" data-en="Automatic system language detection">Автоматическое определение языка системы</li>
+                            <li data-ru="Улучшенный интерфейс выбора языка" data-en="Improved language selection interface">Улучшенный интерфейс выбора языка</li>
                         </ul>
                         <a href="https://github.com/Sparki1337/Schedule-I-Cheat-money/releases/download/v1.9/Money.patcher.1.9.rar" class="download-button">
-                            <i class="fas fa-download"></i> Скачать v1.9
+                            <i class="fas fa-download"></i> <span data-ru="Скачать v1.9" data-en="Download v1.9">Скачать v1.9</span>
                         </a>
                     </div>
                     
                     <div class="card">
-                        <h3>Версия 1.8.2</h3>
-                        <p>Предыдущая стабильная версия</p>
+                        <h3 data-ru="Версия 1.8.2" data-en="Version 1.8.2">Версия 1.8.2</h3>
+                        <p data-ru="Предыдущая стабильная версия" data-en="Previous stable version">Предыдущая стабильная версия</p>
                         <ul class="changelog">
-                            <li>Оптимизированный интерфейс ввода значений</li>
-                            <li>Исправлена работа с Inventory.json</li>
-                            <li>Улучшенная работа с файлами сохранений</li>
+                            <li data-ru="Оптимизированный интерфейс ввода значений" data-en="Optimized value input interface">Оптимизированный интерфейс ввода значений</li>
+                            <li data-ru="Исправлена работа с Inventory.json" data-en="Fixed work with Inventory.json">Исправлена работа с Inventory.json</li>
+                            <li data-ru="Улучшенная работа с файлами сохранений" data-en="Improved work with save files">Улучшенная работа с файлами сохранений</li>
                         </ul>
                         <a href="https://github.com/Sparki1337/Schedule-I-Cheat-money/releases/download/v1.8.2/Money.patcher.1.8.2.rar" class="download-button">
-                            <i class="fas fa-download"></i> Скачать v1.8.2
+                            <i class="fas fa-download"></i> <span data-ru="Скачать v1.8.2" data-en="Download v1.8.2">Скачать v1.8.2</span>
                         </a>
                     </div>
                 </div>
             </section>
 
             <section class="instructions">
-                <h2>Как использовать</h2>
+                <h2 data-ru="Как использовать" data-en="How to Use">Как использовать</h2>
                 <ol>
-                    <li>Скачайте архив с программой</li>
-                    <li>Распакуйте архив в любую папку</li>
-                    <li>Запустите файл <code>Money Patcher.exe</code> двойным кликом</li>
-                    <li>Следуйте инструкциям в программе</li>
+                    <li data-ru="Скачайте архив с программой" data-en="Download the program archive">Скачайте архив с программой</li>
+                    <li data-ru="Распакуйте архив в любую папку" data-en="Extract the archive to any folder">Распакуйте архив в любую папку</li>
+                    <li data-ru="Запустите файл <code>Money Patcher.exe</code> двойным кликом" data-en="Run the <code>Money Patcher.exe</code> file with a double click">Запустите файл <code>Money Patcher.exe</code> двойным кликом</li>
+                    <li data-ru="Следуйте инструкциям в программе" data-en="Follow the instructions in the program">Следуйте инструкциям в программе</li>
                 </ol>
                 <div class="note">
-                    <p><strong>Примечание:</strong> Программа полностью готова к использованию и не требует установки дополнительного ПО. Работает на Windows 10 и Windows 11.</p>
-                </div>
-            </section>
-
-            <section class="screenshots">
-                <h2>Скриншоты программы</h2>
-                <div class="screenshot-grid">
-                    <div class="screenshot">
-                        <img src="https://via.placeholder.com/450x300?text=Главное+меню" alt="Главное меню">
-                        <p>Главное меню программы</p>
-                    </div>
-                    <div class="screenshot">
-                        <img src="https://via.placeholder.com/450x300?text=Изменение+денег" alt="Изменение денег">
-                        <p>Процесс изменения баланса</p>
-                    </div>
+                    <p><strong data-ru="Примечание:" data-en="Note:">Примечание:</strong> <span data-ru="Программа полностью готова к использованию и не требует установки дополнительного ПО. Работает на Windows 10 и Windows 11." data-en="The program is ready to use and does not require additional software installation. Works on Windows 10 and Windows 11.">Программа полностью готова к использованию и не требует установки дополнительного ПО. Работает на Windows 10 и Windows 11.</span></p>
                 </div>
             </section>
         </main>
 
         <footer>
-            <p>Money Patcher для Schedule I &copy; 2023-2024</p>
-            <p>Программа предназначена только для ознакомительных целей.</p>
-            <p>Создатель: <a href="https://github.com/Sparki1337" target="_blank">Sparki1337</a></p>
+            <p>Money Patcher для Schedule I &copy; 2025-2026</p>
+            <p data-ru="Программа предназначена только для ознакомительных целей." data-en="The program is intended for educational purposes only.">Программа предназначена только для ознакомительных целей.</p>
+            <p data-ru="Создатель:" data-en="Creator:">Создатель: <a href="https://github.com/Sparki1337" target="_blank">Sparki1337</a></p>
         </footer>
     </div>
 

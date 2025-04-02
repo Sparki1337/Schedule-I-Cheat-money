@@ -26,6 +26,38 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
+    const langButton = document.getElementById('lang-button');
+    const langSpan = langButton.querySelector('span');
+    
+    const savedLang = localStorage.getItem('lang');
+    
+    if (savedLang) {
+        document.body.setAttribute('data-lang', savedLang);
+        langSpan.textContent = savedLang.toUpperCase();
+        updateTexts(savedLang);
+    }
+    
+    langButton.addEventListener('click', function() {
+        const currentLang = document.body.getAttribute('data-lang');
+        const newLang = currentLang === 'ru' ? 'en' : 'ru';
+        
+        document.body.setAttribute('data-lang', newLang);
+        langSpan.textContent = newLang.toUpperCase();
+        
+        localStorage.setItem('lang', newLang);
+        updateTexts(newLang);
+    });
+    
+    function updateTexts(lang) {
+        document.querySelectorAll('[data-ru]').forEach(element => {
+            if (lang === 'ru') {
+                element.textContent = element.getAttribute('data-ru');
+            } else {
+                element.textContent = element.getAttribute('data-en');
+            }
+        });
+    }
+    
     const downloadButtons = document.querySelectorAll('.download-button');
     
     downloadButtons.forEach(button => {
