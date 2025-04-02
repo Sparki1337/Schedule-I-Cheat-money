@@ -1,6 +1,6 @@
-/* Основные переменные для светлой и темной тем */
+
 :root {
-    /* Светлая тема (по умолчанию) */
+    
     --bg-primary: #f5f5f5;
     --bg-secondary: #ffffff;
     --text-primary: #333333;
@@ -14,7 +14,7 @@
     --ascii-bg: rgba(255, 255, 255, 0.7);
 }
 
-/* Темная тема */
+
 .dark-theme {
     --bg-primary: #121212;
     --bg-secondary: #1e1e1e;
@@ -29,7 +29,7 @@
     --ascii-bg: rgba(40, 40, 40, 0.8);
 }
 
-/* Общие стили */
+
 * {
     margin: 0;
     padding: 0;
@@ -50,7 +50,7 @@ body {
     padding: 0 20px;
 }
 
-/* Кнопка переключения темы */
+
 .theme-toggle {
     position: fixed;
     top: 20px;
@@ -78,7 +78,7 @@ body {
     transform: scale(1.1);
 }
 
-/* Шапка сайта */
+
 header {
     background: var(--header-bg);
     color: white;
@@ -114,7 +114,7 @@ h1 {
     opacity: 0.9;
 }
 
-/* Секции */
+
 section {
     background-color: var(--bg-secondary);
     border-radius: 10px;
@@ -151,7 +151,7 @@ h2 {
     font-size: 1.2rem;
 }
 
-/* Карточки для скачивания */
+
 .download-cards {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -209,7 +209,7 @@ h2 {
     margin-right: 8px;
 }
 
-/* Инструкции */
+
 .instructions ol {
     margin-left: 30px;
     margin-bottom: 20px;
@@ -234,7 +234,7 @@ code {
     margin-top: 20px;
 }
 
-/* Скриншоты */
+
 .screenshot-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
@@ -261,7 +261,7 @@ code {
     color: var(--text-secondary);
 }
 
-/* Подвал */
+
 footer {
     text-align: center;
     padding: 30px 0;
@@ -283,7 +283,7 @@ footer a:hover {
     text-decoration: underline;
 }
 
-/* Адаптивность */
+
 @media (max-width: 768px) {
     .download-cards, .screenshot-grid, .features ul {
         grid-template-columns: 1fr;
