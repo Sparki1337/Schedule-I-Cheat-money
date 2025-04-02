@@ -244,25 +244,28 @@ footer {
 }
 
 .refresh-notice {
-    background-color: rgba(255, 193, 7, 0.2);
+    background-color: rgba(255, 193, 7, 0.3);
     border-left: 4px solid #ffc107;
-    padding: 15px;
+    padding: 18px 20px;
     margin: 0 0 30px 0;
     border-radius: var(--border-radius);
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .refresh-notice p {
     margin: 0;
     color: var(--primary-text);
+    font-weight: 500;
 }
 
 .refresh-notice i.fa-exclamation-circle {
     color: #ffc107;
     margin-right: 10px;
-    font-size: 1.2rem;
+    font-size: 1.5rem;
 }
 
 .close-button {

@@ -1,23 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Обработчик для уведомления о обновлении страницы
+    // Уведомление всегда отображается
     const refreshNotice = document.getElementById('refresh-notice');
-    const closeNoticeBtn = document.getElementById('close-notice');
-    
-    // Проверяем, первый ли это визит (используя localStorage)
-    const hasVisitedBefore = localStorage.getItem('hasVisited');
-    
-    if (hasVisitedBefore) {
-        // Если пользователь уже посещал сайт, скрываем уведомление
-        refreshNotice.style.display = 'none';
-    } else {
-        // Если это первый визит, показываем уведомление и запоминаем
-        localStorage.setItem('hasVisited', 'true');
-    }
-    
-    // Добавляем обработчик для кнопки закрытия
-    closeNoticeBtn.addEventListener('click', function() {
-        refreshNotice.style.display = 'none';
-    });
+    refreshNotice.style.display = 'flex'; // Всегда отображаем
     
     // Тема
     const themeButton = document.getElementById('theme-button');
