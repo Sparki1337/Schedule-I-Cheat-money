@@ -1,4 +1,25 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Обработчик для уведомления о обновлении страницы
+    const refreshNotice = document.getElementById('refresh-notice');
+    const closeNoticeBtn = document.getElementById('close-notice');
+    
+    // Проверяем, первый ли это визит (используя localStorage)
+    const hasVisitedBefore = localStorage.getItem('hasVisited');
+    
+    if (hasVisitedBefore) {
+        // Если пользователь уже посещал сайт, скрываем уведомление
+        refreshNotice.style.display = 'none';
+    } else {
+        // Если это первый визит, показываем уведомление и запоминаем
+        localStorage.setItem('hasVisited', 'true');
+    }
+    
+    // Добавляем обработчик для кнопки закрытия
+    closeNoticeBtn.addEventListener('click', function() {
+        refreshNotice.style.display = 'none';
+    });
+    
+    // Тема
     const themeButton = document.getElementById('theme-button');
     const themeIcon = themeButton.querySelector('i');
     
@@ -26,12 +47,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
+    // Язык
     const langButton = document.getElementById('lang-button');
     const langIcon = langButton.querySelector('i');
     const langSpan = langButton.querySelector('span');
     
+    // Настройка начального состояния переключателя языка
     const savedLang = localStorage.getItem('lang');
-    let currentLang = 'ru';
+    let currentLang = 'ru'; // По умолчанию русский
     
     if (savedLang) {
         currentLang = savedLang;
@@ -52,11 +75,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function updateLangButton(lang) {
         if (lang === 'ru') {
-            langIcon.className = 'fas fa-flag-usa';
+            langIcon.className = 'fas fa-flag-usa'; // Флаг США для перехода на английский
             langSpan.textContent = 'Русский';
             langButton.title = 'Switch to English';
         } else {
-            langIcon.className = 'fas fa-flag-russia';
+            langIcon.className = 'fas fa-flag-russia'; // Флаг России для перехода на русский
             langSpan.textContent = 'English';
             langButton.title = 'Переключить на русский';
         }
@@ -65,12 +88,14 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateTexts(lang) {
         document.querySelectorAll('[data-ru]').forEach(element => {
             if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                // Для полей ввода изменяем placeholder или value
                 if (element.hasAttribute('placeholder')) {
                     element.placeholder = element.getAttribute(`data-${lang}-placeholder`);
                 } else {
                     element.value = element.getAttribute(`data-${lang}`);
                 }
             } else {
+                // Для обычных элементов изменяем textContent
                 if (lang === 'ru') {
                     element.textContent = element.getAttribute('data-ru');
                 } else {
@@ -79,13 +104,16 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
+        // Обновляем title страницы
         document.title = lang === 'ru' 
             ? 'Money Patcher для Schedule I' 
             : 'Money Patcher for Schedule I';
             
+        // Обновляем атрибут lang у тега html
         document.documentElement.lang = lang;
     }
     
+    // Анимация кнопок скачивания
     const downloadButtons = document.querySelectorAll('.download-button');
     
     downloadButtons.forEach(button => {
@@ -100,6 +128,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
+    // Плавная прокрутка
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             e.preventDefault();

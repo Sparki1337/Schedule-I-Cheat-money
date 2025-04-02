@@ -2,6 +2,18 @@
 
 A program for changing the balance value in the Schedule I game save files.
 
+## Program Website
+
+For user convenience, an official website has been created: [Money Patcher for Schedule I](https://sparki1337.github.io/Schedule-I-Cheat-money/)
+
+> **Important:** Each time you visit the site, it is recommended to refresh the page (press F5) so that all styles and scripts load correctly.
+
+The website offers:
+- Description of all program features
+- Download links for the latest program versions
+- Usage instructions
+- Switching between Russian and English languages
+
 ## Description
 
 This program automatically finds all Schedule I game saves (for all users) and changes the `OnlineBalance` value to any user-specified amount in the `Money.json` file. The program can also change the amount of cash in the player's inventory (`Inventory.json` file). The program creates a backup of the saves before making changes and allows you to restore them if necessary.

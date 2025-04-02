@@ -241,4 +241,41 @@ footer {
         padding: 20px;
         margin: 20px 0;
     }
+}
+
+.refresh-notice {
+    background-color: rgba(255, 193, 7, 0.2);
+    border-left: 4px solid #ffc107;
+    padding: 15px;
+    margin: 0 0 30px 0;
+    border-radius: var(--border-radius);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.refresh-notice p {
+    margin: 0;
+    color: var(--primary-text);
+}
+
+.refresh-notice i.fa-exclamation-circle {
+    color: #ffc107;
+    margin-right: 10px;
+    font-size: 1.2rem;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    color: var(--secondary-text);
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 0;
+    margin-left: 15px;
+    transition: color 0.2s ease;
+}
+
+.close-button:hover {
+    color: var(--accent-color);
 } 
